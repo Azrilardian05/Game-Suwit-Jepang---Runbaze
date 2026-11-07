@@ -15,7 +15,7 @@
       <p id="instruksi">Pilih Batu, Gunting, atau Kertas. Komputer memilih bersamaan. Mainkan ronde sebanyak yang kamu mau.</p>
     </header>
 
-    <!-- SJ-03: sembunyikan elemen ini (atribut hidden) dan aktifkan tombol setelah app.mjs berhasil terhubung. -->
+    <!-- app.mjs menyembunyikan elemen ini (hidden) dan mengaktifkan tombol hanya setelah inisialisasi berhasil. -->
     <section id="fallback" class="fallback" aria-labelledby="fallback-judul">
       <h2 id="fallback-judul">Permainan belum tersedia</h2>
       <p>Permainan belum bisa dimainkan. Pastikan JavaScript aktif dan muat ulang halaman. Tombol di bawah tetap nonaktif sampai permainan siap.</p>
@@ -37,6 +37,7 @@
         <div class="kartu pilihan">
           <p class="label">Pemain</p>
           <p id="pilihan-pemain" class="nilai">Belum dipilih</p>
+          <p id="penanda-pemain" class="penanda" hidden></p>
         </div>
         <div class="kartu pilihan">
           <p class="label">Komputer</p>
@@ -56,9 +57,15 @@
 
     <section class="kartu hasil" aria-labelledby="hasil-judul">
       <h2 id="hasil-judul">Hasil ronde</h2>
-      <div id="hasil" role="status" aria-live="polite" aria-atomic="true">
+      <div id="hasil">
         <p id="hasil-title" class="hasil-title">Belum ada ronde</p>
         <p id="hasil-alasan">Pilih Batu, Gunting, atau Kertas untuk memulai.</p>
+        <p id="hasil-galat" class="galat" hidden></p>
+      </div>
+      <!-- Pengumuman bagi pembaca layar: app.mjs menulis satu wilayah per pengumuman, bergantian, agar pesan identik tetap terdeteksi. -->
+      <div class="sr-only">
+        <p id="pengumuman-a" role="status" aria-live="polite" aria-atomic="true"></p>
+        <p id="pengumuman-b" role="status" aria-live="polite" aria-atomic="true"></p>
       </div>
     </section>
 
