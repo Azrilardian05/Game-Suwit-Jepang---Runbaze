@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suwit Jepang</title>
+  <meta name="description" content="Suwit Jepang: Batu, Gunting, Kertas melawan komputer. Ronde tanpa batas.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="arena">
+    <header class="judul">
+      <p class="hias" aria-hidden="true">&#9679; &#9679; &#9679;</p>
+      <h1>Suwit Jepang</h1>
+      <p id="instruksi">Pilih Batu, Gunting, atau Kertas. Komputer memilih bersamaan. Mainkan ronde sebanyak yang kamu mau.</p>
+    </header>
+
+    <!-- SJ-03: sembunyikan elemen ini (atribut hidden) dan aktifkan tombol setelah app.mjs berhasil terhubung. -->
+    <section id="fallback" class="fallback" aria-labelledby="fallback-judul">
+      <h2 id="fallback-judul">Permainan belum tersedia</h2>
+      <p>Permainan belum bisa dimainkan. Pastikan JavaScript aktif dan muat ulang halaman. Tombol di bawah tetap nonaktif sampai permainan siap.</p>
+    </section>
+
+    <section class="kartu" aria-labelledby="skor-judul">
+      <h2 id="skor-judul">Skor sesi</h2>
+      <dl class="skor">
+        <div><dt>Menang</dt><dd id="skor-menang">0</dd></div>
+        <div><dt>Kalah</dt><dd id="skor-kalah">0</dd></div>
+        <div><dt>Seri</dt><dd id="skor-seri">0</dd></div>
+      </dl>
+      <p id="catatan-sesi" class="catatan">Skor hanya berlaku selama halaman ini terbuka. Memuat ulang halaman menghapus skor.</p>
+    </section>
+
+    <section aria-labelledby="duel-judul">
+      <h2 id="duel-judul" class="sr-only">Pilihan kedua pihak</h2>
+      <div class="duel">
+        <div class="kartu pilihan">
+          <p class="label">Pemain</p>
+          <p id="pilihan-pemain" class="nilai">Belum dipilih</p>
+        </div>
+        <div class="kartu pilihan">
+          <p class="label">Komputer</p>
+          <p id="pilihan-komputer" class="nilai">Belum dibuka</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="tombol-judul">
+      <h2 id="tombol-judul" class="sr-only">Pilih tanganmu</h2>
+      <div class="tombol-pilihan">
+        <button type="button" class="tombol" data-pilihan="batu" disabled><span class="ikon" aria-hidden="true">&#9679;</span><span>Batu</span></button>
+        <button type="button" class="tombol" data-pilihan="gunting" disabled><span class="ikon" aria-hidden="true">&#9986;</span><span>Gunting</span></button>
+        <button type="button" class="tombol" data-pilihan="kertas" disabled><span class="ikon" aria-hidden="true">&#9636;</span><span>Kertas</span></button>
+      </div>
+    </section>
+
+    <section class="kartu hasil" aria-labelledby="hasil-judul">
+      <h2 id="hasil-judul">Hasil ronde</h2>
+      <div id="hasil" role="status" aria-live="polite" aria-atomic="true">
+        <p id="hasil-title" class="hasil-title">Belum ada ronde</p>
+        <p id="hasil-alasan">Pilih Batu, Gunting, atau Kertas untuk memulai.</p>
+      </div>
+    </section>
+
+    <p class="aksi"><button type="button" id="reset-skor" class="tombol sekunder" disabled>Reset skor</button></p>
+
+    <section class="kartu" aria-labelledby="aturan-judul">
+      <h2 id="aturan-judul">Aturan</h2>
+      <ul class="aturan">
+        <li>Batu mengalahkan Gunting.</li>
+        <li>Gunting mengalahkan Kertas.</li>
+        <li>Kertas mengalahkan Batu.</li>
+      </ul>
+    </section>
+  </main>
+
+  <noscript><p class="noscript">JavaScript nonaktif. Permainan tidak bisa dimainkan sampai JavaScript diaktifkan.</p></noscript>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
