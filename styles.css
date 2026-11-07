@@ -114,6 +114,8 @@ p { margin: 0; }
   box-shadow: 0 0 0 3px var(--kartu);
 }
 
+.penanda { font-weight: 600; color: var(--merah); }
+.galat { font-weight: 600; color: var(--merah); }
 .hasil-title { font-size: 1.25rem; font-weight: 700; }
 .aksi { text-align: center; }
 .aksi .tombol { width: min(100%, 16rem); }
