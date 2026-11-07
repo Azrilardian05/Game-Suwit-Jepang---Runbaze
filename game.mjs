@@ -2,7 +2,7 @@
 export const CHOICES = Object.freeze(['batu', 'gunting', 'kertas']);
 export const ROUND_ERROR = 'Ronde belum diproses. Pilih lagi.';
 
-const LABEL = { batu: 'Batu', gunting: 'Gunting', kertas: 'Kertas' };
+export const LABEL = Object.freeze({ batu: 'Batu', gunting: 'Gunting', kertas: 'Kertas' });
 const BEATS = { batu: 'gunting', gunting: 'kertas', kertas: 'batu' };
 const TITLE = { menang: 'Kamu menang!', kalah: 'Kamu kalah.', seri: 'Seri!' };
 const REJECTED = 4294967295; // 2^32-1 ditolak: sisa 4294967295 nilai = 3 x 1431655765 per opsi
@@ -10,8 +10,16 @@ const MAX_DRAWS = 16; // ponytail: batas pengaman adapter macet; peluang 2^-32 p
 
 const defaultDraw = () => crypto.getRandomValues(new Uint32Array(1))[0];
 
+function freezeState({ scores, lastRound, error }) {
+  return Object.freeze({
+    scores: Object.freeze({ ...scores }),
+    lastRound: lastRound === null ? null : Object.freeze({ ...lastRound }),
+    error,
+  });
+}
+
 export function createInitialState() {
-  return { scores: { menang: 0, kalah: 0, seri: 0 }, lastRound: null, error: null };
+  return freezeState({ scores: { menang: 0, kalah: 0, seri: 0 }, lastRound: null, error: null });
 }
 
 export function resetState() {
@@ -33,18 +41,18 @@ function pickComputer(drawUint32) {
 }
 
 export function playRound(state, playerChoice, drawUint32 = defaultDraw) {
-  const fail = () => ({ scores: { ...state.scores }, lastRound: state.lastRound, error: ROUND_ERROR });
+  const fail = () => freezeState({ ...state, error: ROUND_ERROR });
   try {
     if (!CHOICES.includes(playerChoice)) return fail(); // sebelum random
     const computerChoice = pickComputer(drawUint32);
     const result = judge(playerChoice, computerChoice);
     const next = state.scores[result] + 1;
     if (!Number.isSafeInteger(next)) return fail();
-    return {
+    return freezeState({
       scores: { ...state.scores, [result]: next },
       lastRound: { playerChoice, computerChoice, result },
       error: null,
-    };
+    });
   } catch {
     return fail();
   }

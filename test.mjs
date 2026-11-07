@@ -34,6 +34,28 @@ for (const [p, c, result, title, reason] of table) {
 assert.deepEqual(createInitialState(), { scores: { menang: 0, kalah: 0, seri: 0 }, lastRound: null, error: null });
 assert.deepEqual(Object.keys(playRound(createInitialState(), 'batu', () => 0)).sort(), ['error', 'lastRound', 'scores']);
 
+// Semua keluaran immutable, tanpa membekukan input milik pemanggil.
+{
+  const input = { scores: { menang: 0, kalah: 0, seri: 1 }, lastRound: { playerChoice: 'batu', computerChoice: 'batu', result: 'seri' }, error: null };
+  const success = playRound(input, 'batu', () => 1);
+  const failure = playRound(input, 'invalid', () => { assert.fail('random tidak boleh dipanggil'); });
+  for (const state of [createInitialState(), resetState(), success, failure]) {
+    assert.ok(Object.isFrozen(state));
+    assert.ok(Object.isFrozen(state.scores));
+    assert.throws(() => { state.error = 'changed'; }, TypeError);
+    assert.throws(() => { state.scores.seri = 99; }, TypeError);
+    if (state.lastRound) {
+      assert.ok(Object.isFrozen(state.lastRound));
+      assert.throws(() => { state.lastRound.result = 'kalah'; }, TypeError);
+    }
+  }
+  input.scores.seri = 99;
+  input.lastRound.result = 'kalah';
+  assert.equal(failure.scores.seri, 1);
+  assert.equal(failure.lastRound.result, 'seri');
+  assert.equal(success.scores.seri, 1);
+}
+
 // random: 0/1/2, batas, penolakan
 const pick = (n) => playRound(createInitialState(), 'batu', () => n).lastRound.computerChoice;
 assert.equal(pick(0), 'batu');

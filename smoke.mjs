@@ -11,6 +11,24 @@ try {
 } catch { console.log('SKIP: jsdom tidak ditemukan (set JSDOM_DIR)'); process.exit(0); }
 
 const html = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+
+// Import pengendali tidak otomatis menginisialisasi dokumen global.
+{
+  const dom = new JSDOM(html);
+  globalThis.document = dom.window.document;
+  try {
+    await import('./app.mjs?boundary-check');
+    assert.equal(document.getElementById('fallback').hidden, false);
+    assert.ok([...document.querySelectorAll('button')].every((b) => b.disabled));
+    await import('./main.mjs');
+    assert.equal(document.getElementById('fallback').hidden, true);
+    assert.ok([...document.querySelectorAll('button')].every((b) => !b.disabled));
+  } finally {
+    delete globalThis.document;
+    dom.window.close();
+  }
+}
+
 const ERR = 'Ronde belum diproses. Pilih lagi.';
 const make = (draw) => {
   const dom = new JSDOM(html);
@@ -55,6 +73,9 @@ const make = (draw) => {
   assert.equal(t.$('panel-hasil').dataset.result, 'seri');
   assert.equal(t.btn('batu').dataset.selected, 'true');
   assert.equal(t.btn('gunting').dataset.selected, 'false');
+  const snapshot = t.api.getState();
+  assert.throws(() => { snapshot.scores.seri = 99; }, TypeError);
+  assert.throws(() => { snapshot.lastRound.playerChoice = 'kertas'; }, TypeError);
   assert.equal(t.d.activeElement, nodes[0]);
   assert.ok(!t.btn('batu').disabled);
   assert.ok(t.say().includes('Seri!') && t.say().includes('Menang 0, Kalah 0, Seri 1.'));
@@ -64,6 +85,7 @@ const make = (draw) => {
   assert.equal(total(), 1);
   for (let i = 0; i < 19; i++) t.btn(['batu', 'gunting', 'kertas'][i % 3]).click();
   assert.equal(total(), 20);
+  assert.equal(snapshot.scores.seri, 1); // snapshot lama tetap utuh
   assert.equal(t.btn('batu'), nodes[0]); // node tidak diganti
   assert.ok(t.say().length > 0);
   // reset
