@@ -10,7 +10,7 @@
 <body>
   <main class="arena">
     <header class="judul">
-      <p class="hias" aria-hidden="true">&#9679; &#9679; &#9679;</p>
+      <p class="hias">PERMAINAN KLASIK · RONDE TANPA BATAS</p>
       <h1>Suwit Jepang</h1>
       <p id="instruksi">Pilih Batu, Gunting, atau Kertas. Komputer memilih bersamaan. Mainkan ronde sebanyak yang kamu mau.</p>
     </header>
@@ -21,8 +21,11 @@
       <p>Permainan belum bisa dimainkan. Pastikan JavaScript aktif dan muat ulang halaman. Tombol di bawah tetap nonaktif sampai permainan siap.</p>
     </section>
 
-    <section class="kartu" aria-labelledby="skor-judul">
-      <h2 id="skor-judul">Skor sesi</h2>
+    <section class="kartu papan-skor" aria-labelledby="skor-judul">
+      <div class="kepala-kartu">
+        <h2 id="skor-judul">Skor sesi</h2>
+        <button type="button" id="reset-skor" class="tombol sekunder" disabled>Reset skor</button>
+      </div>
       <dl class="skor">
         <div><dt>Menang</dt><dd id="skor-menang">0</dd></div>
         <div><dt>Kalah</dt><dd id="skor-kalah">0</dd></div>
@@ -31,31 +34,34 @@
       <p id="catatan-sesi" class="catatan">Skor hanya berlaku selama halaman ini terbuka. Memuat ulang halaman menghapus skor.</p>
     </section>
 
-    <section aria-labelledby="duel-judul">
+    <section class="panggung" aria-labelledby="duel-judul">
       <h2 id="duel-judul" class="sr-only">Pilihan kedua pihak</h2>
       <div class="duel">
         <div class="kartu pilihan">
           <p class="label">Pemain</p>
+          <span id="ikon-pemain" class="tangan" aria-hidden="true">✊</span>
           <p id="pilihan-pemain" class="nilai">Belum dipilih</p>
           <p id="penanda-pemain" class="penanda" hidden></p>
         </div>
+        <span class="versus" aria-hidden="true">VS</span>
         <div class="kartu pilihan">
           <p class="label">Komputer</p>
+          <span id="ikon-komputer" class="tangan" aria-hidden="true">?</span>
           <p id="pilihan-komputer" class="nilai">Belum dibuka</p>
         </div>
       </div>
     </section>
 
     <section aria-labelledby="tombol-judul">
-      <h2 id="tombol-judul" class="sr-only">Pilih tanganmu</h2>
+      <div class="petunjuk"><h2 id="tombol-judul">Pilih tanganmu</h2><p>Setiap pilihan memulai ronde baru.</p></div>
       <div class="tombol-pilihan">
-        <button type="button" class="tombol" data-pilihan="batu" disabled><span class="ikon" aria-hidden="true">&#9679;</span><span>Batu</span></button>
-        <button type="button" class="tombol" data-pilihan="gunting" disabled><span class="ikon" aria-hidden="true">&#9986;</span><span>Gunting</span></button>
-        <button type="button" class="tombol" data-pilihan="kertas" disabled><span class="ikon" aria-hidden="true">&#9636;</span><span>Kertas</span></button>
+        <button type="button" class="tombol" data-pilihan="batu" disabled><span class="ikon" aria-hidden="true">✊</span><span>Batu</span></button>
+        <button type="button" class="tombol" data-pilihan="gunting" disabled><span class="ikon" aria-hidden="true">✌️</span><span>Gunting</span></button>
+        <button type="button" class="tombol" data-pilihan="kertas" disabled><span class="ikon" aria-hidden="true">✋</span><span>Kertas</span></button>
       </div>
     </section>
 
-    <section class="kartu hasil" aria-labelledby="hasil-judul">
+    <section id="panel-hasil" class="kartu hasil" aria-labelledby="hasil-judul">
       <h2 id="hasil-judul">Hasil ronde</h2>
       <div id="hasil">
         <p id="hasil-title" class="hasil-title">Belum ada ronde</p>
@@ -69,10 +75,8 @@
       </div>
     </section>
 
-    <p class="aksi"><button type="button" id="reset-skor" class="tombol sekunder" disabled>Reset skor</button></p>
-
-    <section class="kartu" aria-labelledby="aturan-judul">
-      <h2 id="aturan-judul">Aturan</h2>
+    <section class="panduan" aria-labelledby="aturan-judul">
+      <h2 id="aturan-judul">Cara menang</h2>
       <ul class="aturan">
         <li>Batu mengalahkan Gunting.</li>
         <li>Gunting mengalahkan Kertas.</li>

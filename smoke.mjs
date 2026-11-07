@@ -32,6 +32,9 @@ const make = (draw) => {
   assert.ok([...t.d.querySelectorAll('button')].every((b) => !b.disabled));
   assert.equal(t.d.activeElement, t.d.body);
   assert.equal(t.$('pilihan-komputer').textContent, 'Belum dibuka');
+  assert.equal(t.$('ikon-komputer').textContent, '?');
+  assert.equal(t.$('panel-hasil').dataset.result, '');
+  assert.ok([...t.d.querySelectorAll('[data-pilihan]')].every((b) => b.dataset.selected === 'false'));
 }
 
 // alur pertama: batu vs batu (draw 0)
@@ -47,6 +50,11 @@ const make = (draw) => {
   assert.equal(t.$('hasil-title').textContent, 'Seri!');
   assert.equal(t.$('hasil-alasan').textContent, 'Kalian sama-sama memilih Batu.');
   assert.equal(t.$('skor-seri').textContent, '1');
+  assert.equal(t.$('ikon-pemain').textContent, '✊');
+  assert.equal(t.$('ikon-komputer').textContent, '✊');
+  assert.equal(t.$('panel-hasil').dataset.result, 'seri');
+  assert.equal(t.btn('batu').dataset.selected, 'true');
+  assert.equal(t.btn('gunting').dataset.selected, 'false');
   assert.equal(t.d.activeElement, nodes[0]);
   assert.ok(!t.btn('batu').disabled);
   assert.ok(t.say().includes('Seri!') && t.say().includes('Menang 0, Kalah 0, Seri 1.'));
@@ -66,6 +74,9 @@ const make = (draw) => {
   assert.equal(t.$('pilihan-komputer').textContent, 'Belum dibuka');
   assert.equal(t.$('penanda-pemain').hidden, true);
   assert.equal(t.$('hasil-title').textContent, 'Belum ada ronde');
+  assert.equal(t.$('ikon-komputer').textContent, '?');
+  assert.equal(t.$('panel-hasil').dataset.result, '');
+  assert.ok([...t.d.querySelectorAll('[data-pilihan]')].every((b) => b.dataset.selected === 'false'));
   assert.equal(t.d.activeElement, t.$('reset-skor'));
   t.btn('kertas').click();
   assert.equal(total(), 1);
@@ -90,12 +101,16 @@ const make = (draw) => {
   assert.equal(t.$('hasil-galat').hidden, true);
   assert.equal(t.$('skor-menang').textContent, '1');
   assert.equal(t.$('pilihan-komputer').textContent, 'Gunting');
+  assert.equal(t.$('ikon-komputer').textContent, '✌️');
+  assert.equal(t.$('panel-hasil').dataset.result, 'menang');
   assert.ok(t.say().includes('Batu mengalahkan Gunting.'));
   // gagal setelah sukses: hasil lama bertahan
   fail = true; t.btn('kertas').click();
   assert.equal(t.$('hasil-title').textContent, 'Kamu menang!');
   assert.equal(t.$('skor-menang').textContent, '1');
   assert.equal(t.$('hasil-galat').textContent, ERR);
+  assert.equal(t.btn('batu').dataset.selected, 'true');
+  assert.equal(t.btn('kertas').dataset.selected, 'false');
 }
 
 // DOM rusak: lempar, fallback tetap tampil, tombol nonaktif
