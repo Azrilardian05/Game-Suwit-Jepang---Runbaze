@@ -1,10 +1,12 @@
 // Pengendali Suwit Jepang: satu state memori, transaksi sinkron, tanpa timer/storage/jaringan.
 import { CHOICES, LABEL, createInitialState, playRound, resetState, describeRound } from './game.mjs';
 
+const ICON = { batu: '✊', gunting: '✌️', kertas: '✋' };
 const MARKER = 'Pilihanmu';
 const IDS = [
   'fallback', 'skor-menang', 'skor-kalah', 'skor-seri', 'pilihan-pemain', 'penanda-pemain',
   'pilihan-komputer', 'hasil-title', 'hasil-alasan', 'hasil-galat', 'pengumuman-a', 'pengumuman-b', 'reset-skor',
+  'ikon-pemain', 'ikon-komputer', 'panel-hasil',
 ];
 
 const scoreText = (s) => `Menang ${s.scores.menang}, Kalah ${s.scores.kalah}, Seri ${s.scores.seri}.`;
@@ -51,6 +53,10 @@ export function init(doc = document, { drawUint32 } = {}) {
     el['skor-kalah'].textContent = String(s.scores.kalah);
     el['skor-seri'].textContent = String(s.scores.seri);
     const d = describeRound(s.lastRound);
+    el['ikon-pemain'].textContent = d ? ICON[s.lastRound.playerChoice] : ICON.batu;
+    el['ikon-komputer'].textContent = d ? ICON[s.lastRound.computerChoice] : '?';
+    el['panel-hasil'].dataset.result = d ? s.lastRound.result : '';
+    for (const b of el.buttons) b.dataset.selected = String(Boolean(d && b.dataset.pilihan === s.lastRound.playerChoice));
     el['pilihan-pemain'].textContent = d ? LABEL[s.lastRound.playerChoice] : initial.pemain;
     el['pilihan-komputer'].textContent = d ? LABEL[s.lastRound.computerChoice] : initial.komputer;
     el['penanda-pemain'].textContent = d ? MARKER : '';
