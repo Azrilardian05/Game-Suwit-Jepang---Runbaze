@@ -1,7 +1,6 @@
 // Pengendali Suwit Jepang: satu state memori, transaksi sinkron, tanpa timer/storage/jaringan.
-import { CHOICES, ROUND_ERROR, createInitialState, playRound, resetState, describeRound } from './game.mjs';
+import { CHOICES, LABEL, createInitialState, playRound, resetState, describeRound } from './game.mjs';
 
-const LABEL = { batu: 'Batu', gunting: 'Gunting', kertas: 'Kertas' };
 const MARKER = 'Pilihanmu';
 const IDS = [
   'fallback', 'skor-menang', 'skor-kalah', 'skor-seri', 'pilihan-pemain', 'penanda-pemain',
@@ -64,10 +63,7 @@ export function init(doc = document, { drawUint32 } = {}) {
 
   function play(choice) {
     // validasi -> random -> calon state -> commit sekali -> render -> pengumuman
-    const candidate = CHOICES.includes(choice)
-      ? playRound(state, choice, drawUint32)
-      : { scores: { ...state.scores }, lastRound: state.lastRound, error: ROUND_ERROR };
-    state = candidate;
+    state = playRound(state, choice, drawUint32);
     render();
     if (state.error !== null) return announce(state.error);
     const d = describeRound(state.lastRound);
@@ -97,8 +93,4 @@ export function init(doc = document, { drawUint32 } = {}) {
     throw e;
   }
   return { getState: () => state };
-}
-
-if (typeof document !== 'undefined') {
-  try { init(document); } catch (e) { console.error('Permainan tidak tersedia:', e); }
 }
